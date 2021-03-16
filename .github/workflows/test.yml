@@ -39,6 +39,6 @@ jobs:
         echo "/usr/local/kubebuilder/bin" >> $GITHUB_PATH
         go get -u github.com/go-bindata/go-bindata/...
     - name: Test Operator
-      run: "\tcd operator && make testci"
+      run: "\tcd operator && make testcir"
     - name: Test Driver
       run: "\tcd driver && make test"
