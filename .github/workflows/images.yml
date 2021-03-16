@@ -1,8 +1,12 @@
 name: PR Test
-on: pull_request
+on:
+  push:
+    branches:
+      - main
+      - feature-pipeline
 jobs:
-  test-unit:
-    name: Test
+  publish:
+    name: Publish
     runs-on: ubuntu-20.04
     defaults:
       run:
