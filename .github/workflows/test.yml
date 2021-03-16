@@ -41,4 +41,4 @@ jobs:
     - name: Test Operator
       run: "\tcd operator && make testci"
     - name: Test Driver
-      run: "\tcd ../driver && make test"
+      run: "\tcd driver && make test"
