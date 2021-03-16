@@ -47,3 +47,24 @@ jobs:
       run: |-
         readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
         echo "last commit log: $last_commit_log"
+        if [[ ${last_commit_log} =~ .*publishbase.* ]]; then
+          echo "Publish base image"
+        else
+          echo "Skip publish base image"
+        fi
+    - name: Publish driver image
+      run: |-
+        readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
+        if ! [[ ${last_commit_log} =~ .*skipdriver.* ]]; then
+          echo "Publish driver image"
+        else
+          echo "Skip publish driver image"
+        fi
+    - name: Publish operator image
+      run: |-
+        readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
+        if ! [[ ${last_commit_log} =~ .*skipoperator.* ]]; then
+          echo "Publish operator image"
+        else
+          echo "Skip publish operator image"
+        fi
