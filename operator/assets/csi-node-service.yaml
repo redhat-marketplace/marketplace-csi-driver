@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: csi-rhm-cos-ds
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    matchLabels:
+      app: csi-rhm-cos-ds
+  template:
+    metadata:
+      labels:
+        app: csi-rhm-cos-ds
+        "csi.rhm.cos.ibm.com/driverVersion": "${DRIVER_VERSION}"
+    spec:
+      serviceAccount: csi-rhm-cos
+      priorityClassName: system-node-critical
+      containers:
+      - name: csi-node-driver-registrar
+        image: quay.io/k8scsi/csi-node-driver-registrar:v1.2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9808
+          name: healthz
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: healthz
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 30
+        args:
+        - "--v=5"
+        - "--csi-address=$(ADDRESS)"
+        - "--kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)"
+        securityContext:
+            privileged: true
+        env:
+        - name: ADDRESS
+          value: /csi/csi.sock
+        - name: DRIVER_REG_SOCK_PATH
+          value: ${KUBELET_ROOT}/kubelet/plugins/csi-rhm-cos/csi.sock
+        - name: KUBE_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: registration-dir
+          mountPath: /registration
+        - name: socket-dir
+          mountPath: /csi
+      - name: csi-rhm-cos
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN"]
+          allowPrivilegeEscalation: true
+        image: "${DRIVER_IMAGE}:${DRIVER_VERSION}"
+        imagePullPolicy: Always
+        args:
+        - "--node-name=$(KUBE_NODE_NAME)"
+        # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md
+        - "--v=5"
+        env:
+        - name: KUBE_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: dev-dir
+          mountPath: /dev
+        - name: mountpoint-dir
+          mountPath: ${KUBELET_ROOT}/kubelet/pods
+          mountPropagation: Bidirectional
+        - name: socket-dir
+          mountPath: /csi
+      - name: liveness-probe
+        imagePullPolicy: Always
+        image: quay.io/k8scsi/livenessprobe:v2.1.0
+        args:
+        - "--csi-address=$(ADDRESS)"
+        env:
+        - name: ADDRESS
+          value: /csi/csi.sock
+        volumeMounts:
+        - name: socket-dir
+          mountPath: /csi
+      volumes:
+      - name: dev-dir
+        hostPath:
+          path: /dev
+          type: Directory
+      # https://kubernetes-csi.github.io/docs/deploying.html#driver-volume-mounts
+      - name: socket-dir
+        hostPath:
+          path: ${KUBELET_ROOT}/kubelet/plugins/csi-rhm-cos
+          type: DirectoryOrCreate
+      - name: mountpoint-dir
+        hostPath:
+          path: ${KUBELET_ROOT}/kubelet/pods
+          type: DirectoryOrCreate
+      - name: registration-dir
+        hostPath:
+          path: ${KUBELET_ROOT}/kubelet/plugins_registry
+          type: Directory

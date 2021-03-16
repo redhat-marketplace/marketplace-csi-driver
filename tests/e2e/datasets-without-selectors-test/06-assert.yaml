@@ -1,0 +1,31 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: dataset2
+  namespace: default
+status:
+  conditions:
+    - type: Install
+      status: 'True'
+      reason: InstallComplete
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csi-rhm-cos-nginx-auto
+  namespace: default
+status:
+  phase: Running
+  conditions:
+    - type: csi.rhm.cos.ibm.com/datasets
+      status: 'True'
+      reason: Complete
+      message: Reconcile mounted 1 datasets
+    - type: Initialized
+      status: 'True'
+    - type: Ready
+      status: 'True'
+    - type: ContainersReady
+      status: 'True'
+    - type: PodScheduled
+      status: 'True'

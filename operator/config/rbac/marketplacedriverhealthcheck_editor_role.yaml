@@ -1,0 +1,24 @@
+# permissions for end users to edit marketplacedriverhealthchecks.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: marketplacedriverhealthcheck-editor-role
+rules:
+- apiGroups:
+  - marketplace.redhat.com
+  resources:
+  - marketplacedriverhealthchecks
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - marketplace.redhat.com
+  resources:
+  - marketplacedriverhealthchecks/status
+  verbs:
+  - get

@@ -1,0 +1,28 @@
+FROM golang:alpine
+
+
+ARG S3FS_VERSION=v1.88
+ARG ldflags
+
+RUN apk --update add bash fuse libcurl libxml2 libstdc++ libgcc alpine-sdk automake autoconf libxml2-dev fuse-dev curl-dev git; \
+    git clone https://github.com/s3fs-fuse/s3fs-fuse.git; \
+    cd s3fs-fuse; \
+    git checkout tags/${S3FS_VERSION}; \
+    ./autogen.sh; \
+    ./configure --prefix=/usr ; \
+    make; \
+    make install; \
+    make clean; \
+    rm -rf /var/cache/apk/*; \
+    apk del git automake autoconf;
+
+RUN sed -i s/"#user_allow_other"/"user_allow_other"/g /etc/fuse.conf
+
+WORKDIR /appbuild
+COPY . /appbuild
+RUN go build -ldflags "${ldflags}" -o build/_output/bin/driver ./cmd/
+RUN cp build/_output/bin/driver /usr/local/bin/driver \
+  && rm -rf /appbuild
+
+# set entrypoint
+ENTRYPOINT ["/usr/local/bin/driver"]

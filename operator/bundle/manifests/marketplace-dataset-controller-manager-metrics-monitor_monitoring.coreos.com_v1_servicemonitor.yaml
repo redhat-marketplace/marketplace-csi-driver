@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/managed-by: OLM
+    control-plane: controller-manager
+    redhat.marketplace.com/name: redhat-marketplace-dataset-operator
+  name: marketplace-dataset-controller-manager-metrics-monitor
+spec:
+  endpoints:
+  - path: /metrics
+    port: https
+  selector:
+    matchLabels:
+      control-plane: controller-manager

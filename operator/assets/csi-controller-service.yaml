@@ -1,0 +1,70 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: csi-rhm-cos-ss
+  namespace: ${NAMESPACE}
+spec:
+  serviceName: csi-rhm-cos-ss
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csi-rhm-cos-ss
+  template:
+    metadata:
+      labels:
+        app: csi-rhm-cos-ss
+        "csi.rhm.cos.ibm.com/driverVersion": "${DRIVER_VERSION}"
+    spec:
+      serviceAccount: csi-rhm-cos
+      priorityClassName: system-node-critical
+      containers:
+      - name: csi-attacher
+        image: quay.io/k8scsi/csi-attacher:v2.2.0
+        args:
+        - "--csi-address=$(ADDRESS)"
+        - "--v=5"
+        env:
+        - name: ADDRESS
+          value: /var/lib/csi/sockets/pluginproxy/csi.sock
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: socket-dir
+          mountPath: /var/lib/csi/sockets/pluginproxy/
+      - name: csi-provisioner
+        image: quay.io/k8scsi/csi-provisioner:v2.0.2
+        args:
+        - "--extra-create-metadata"
+        - "--csi-address=$(ADDRESS)"
+        - "--v=5"
+        env:
+        - name: ADDRESS
+          value: /var/lib/csi/sockets/pluginproxy/csi.sock
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: socket-dir
+          mountPath: /var/lib/csi/sockets/pluginproxy/
+      - name: csi-rhm-cos
+        image: "${DRIVER_IMAGE}:${DRIVER_VERSION}"
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: true
+          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN"]
+        args:
+        - "--node-name=$(KUBE_NODE_NAME)"
+        - "--csi-endpoint=unix://$(ADDRESS)"
+        - "--v=5"
+        env:
+        - name: ADDRESS
+          value: /var/lib/csi/sockets/pluginproxy/csi.sock
+        - name: KUBE_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - mountPath: /var/lib/csi/sockets/pluginproxy/
+          name: socket-dir
+      volumes:
+      - name: socket-dir
+        emptyDir: {}

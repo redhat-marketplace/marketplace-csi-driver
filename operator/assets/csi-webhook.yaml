@@ -1,0 +1,24 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: openshift-redhat-marketplace/marketplace-dataset-serving-cert
+  name: marketplace-dataset-mutating-webhook-configuration
+webhooks:
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: marketplace-dataset-webhook-service
+        namespace: openshift-redhat-marketplace
+        path: /rhm-csi-mutate-v1-pod
+    failurePolicy: Ignore
+    name: webhook.csi.rhm
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - pods

@@ -1,0 +1,13 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: csi-rhm-cos-csi-cluster-role-binding
+  namespace: ${NAMESPACE}
+subjects:
+  - kind: ServiceAccount
+    name: csi-rhm-cos
+    namespace: ${NAMESPACE}
+roleRef:
+  kind: ClusterRole
+  name: csi-rhm-cos-csi-cluster-role
+  apiGroup: rbac.authorization.k8s.io

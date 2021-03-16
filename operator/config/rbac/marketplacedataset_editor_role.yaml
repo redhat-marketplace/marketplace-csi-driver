@@ -1,0 +1,24 @@
+# permissions for end users to edit marketplacedatasets.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: marketplacedataset-editor-role
+rules:
+- apiGroups:
+  - marketplace.redhat.com
+  resources:
+  - marketplacedatasets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - marketplace.redhat.com
+  resources:
+  - marketplacedatasets/status
+  verbs:
+  - get

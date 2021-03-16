@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csi-rhm-cos-nginx-auto
+  namespace: default
+status:
+  phase: Running
+  conditions:
+    - type: csi.rhm.cos.ibm.com/datasets
+      status: 'True'
+      reason: Complete
+      message: Reconcile mounted 2 datasets
+    - type: Initialized
+      status: 'True'
+    - type: Ready
+      status: 'True'
+    - type: ContainersReady
+      status: 'True'
+    - type: PodScheduled
+      status: 'True'

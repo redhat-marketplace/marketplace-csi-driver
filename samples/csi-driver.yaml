@@ -1,0 +1,12 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceCSIDriver
+metadata:
+  name: marketplacecsidriver
+  namespace: openshift-redhat-marketplace
+spec:
+  endpoint: "s3.us.cloud-object-storage.appdomain.cloud"
+  mountRootPath: "/var/redhat-marketplace/datasets"
+  healthCheckIntervalInMinutes: 0
+  credential:
+    name: "redhat-marketplace-pull-secret"
+    type: "rhm-pull-secret"

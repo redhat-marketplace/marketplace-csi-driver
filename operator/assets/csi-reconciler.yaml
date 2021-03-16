@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: csi-rhm-cos-ctrl
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    matchLabels:
+      app: csi-rhm-cos-ctrl
+  template:
+    metadata:
+      labels:
+        app: csi-rhm-cos-ctrl
+        "csi.rhm.cos.ibm.com/driverVersion": "${DRIVER_VERSION}"
+    spec:
+      serviceAccount: csi-rhm-cos
+      priorityClassName: system-node-critical
+      containers:
+      - name: csi-rhm-cos
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN"]
+          allowPrivilegeEscalation: true
+        image: "${DRIVER_IMAGE}:${DRIVER_VERSION}"
+        imagePullPolicy: Always
+        args:
+        - "--node-name=$(KUBE_NODE_NAME)"
+        # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md
+        - "--v=5"
+        - "--exec-mode=reconcile"
+        env:
+        - name: KUBE_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: mountpoint-dir
+          mountPath: ${KUBELET_ROOT}/kubelet/pods
+          mountPropagation: Bidirectional
+      volumes:
+      - name: mountpoint-dir
+        hostPath:
+          path: ${KUBELET_ROOT}/kubelet/pods
+          type: DirectoryOrCreate

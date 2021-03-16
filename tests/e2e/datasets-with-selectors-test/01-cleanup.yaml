@@ -1,0 +1,15 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+delete:
+  - apiVersion: v1
+    kind: Pod
+    namespace: default
+  - apiVersion: v1
+    kind: Secret
+    name: redhat-marketplace-pull-secret
+  - apiVersion: marketplace.redhat.com/v1alpha1
+    kind: MarketplaceCSIDriver
+    name: marketplacecsidriver
+  - apiVersion: marketplace.redhat.com/v1alpha1
+    kind: MarketplaceDataset
+    namespace: default

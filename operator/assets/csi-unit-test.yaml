@@ -1,0 +1,11 @@
+kind: UnsupportedService
+apiVersion: v1
+metadata:
+  name: csi-rhm-cos-ss
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    app: csi-rhm-cos-ss
+  ports:
+    - name: dummy
+      port: 12345

@@ -1,0 +1,476 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "marketplace.redhat.com/v1alpha1",
+          "kind": "MarketplaceCSIDriver",
+          "metadata": {
+            "name": "marketplacecsidriver"
+          },
+          "spec": {
+            "credential": {
+              "name": "redhat-marketplace-pull-secret",
+              "type": "rhm-pull-secret"
+            },
+            "endpoint": "s3.us.cloud-object-storage.appdomain.cloud",
+            "healthCheckIntervalInMinutes": 0,
+            "mountRootPath": "/var/redhat-marketplace/datasets"
+          }
+        },
+        {
+          "apiVersion": "marketplace.redhat.com/v1alpha1",
+          "kind": "MarketplaceDataset",
+          "metadata": {
+            "name": "us-labor-stats"
+          },
+          "spec": {
+            "bucket": "rhmccp-ae4ac7b9-38e6-4c5f-8e5b-566b7cfed37d"
+          }
+        },
+        {
+          "apiVersion": "marketplace.redhat.com/v1alpha1",
+          "kind": "MarketplaceDriverHealthCheck",
+          "metadata": {
+            "name": "marketplacedriverhealthcheck-sample"
+          },
+          "spec": {
+            "affectedNodes": [
+              ""
+            ]
+          }
+        }
+      ]
+    capabilities: Full Lifecycle
+    operatorframework.io/suggested-namespace: openshift-operators
+    operators.operatorframework.io/builder: operator-sdk-v1.4.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+    repository: https://github.com/redhat-marketplace/marketplace-csi-driver
+    support: IBM Corporation
+  name: dataset-operator.v0.0.2
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: MarketplaceCSIDriver is the resource that deploys the marketplace CSI driver
+      displayName: Marketplace CSIDriver
+      kind: MarketplaceCSIDriver
+      name: marketplacecsidrivers.marketplace.redhat.com
+      version: v1alpha1
+    - description: MarketplaceDataset is the resource identifying a purchased dataset from Red Hat Marketplace
+      displayName: Marketplace Dataset
+      kind: MarketplaceDataset
+      name: marketplacedatasets.marketplace.redhat.com
+      version: v1alpha1
+    - description: MarketplaceDriverHealthCheck is used by the Operator to trigger mounted volume check and repair
+      displayName: Marketplace Driver Health Check
+      kind: MarketplaceDriverHealthCheck
+      name: marketplacedriverhealthchecks.marketplace.redhat.com
+      version: v1alpha1
+  description: |
+    The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into customer workloads.
+    ### Installation
+    1. Create or get your pull secret from [Red Hat Marketplace](https://marketplace.redhat.com/en-us/documentation/clusters#get-pull-secret).
+
+    2. Create a Kubernetes secret in the openshift-redhat-marketplace namespace with the name `redhat-marketplace-pull-secret` and key `PULL_SECRET` with the value of the Red hat Marketplace Pull Secret.
+
+       ```sh
+       # Replace ${PULL_SECRET} with your secret from Red Hat Marketplace
+       oc create secret generic redhat-marketplace-pull-secret -n  openshift-redhat-marketplace --from-literal=PULL_SECRET=${PULL_SECRET}
+       ```
+
+    3. Install the Red Hat Marketplace Dataset Operator in the `openshift-operators` namespace.
+
+    4. Create an instance of Marketplace CSIDriver in `openshift-redhat-marketplace` namespace. Use the default values in the form/yaml.
+
+    ### Documentation
+    You can find our documentation [here.](https://marketplace.redhat.com/en-us/documentation/)
+
+    ### Getting help
+    If you encounter any issues while using Red Hat Marketplace operator, you
+    can create an issue on our [Github
+    repo](https://github.com/redhat-marketplace/redhat-marketplace-operator) for
+    bugs, enhancements, or other requests. You can also visit our main page and
+    review our [support](https://marketplace.redhat.com/en-us/support) and [documentation](https://marketplace.redhat.com/en-us/documentation/).
+
+    ### Readme
+    You can find our readme [here.](https://github.com/redhat-marketplace/redhat-marketplace-operator/blob/develop/README.md)
+
+    ### License information
+    You can find our license information [here.](https://github.com/redhat-marketplace/redhat-marketplace-operator/blob/develop/LICENSE)
+  displayName: Red Hat Marketplace Dataset Operator
+  icon:
+  - base64data: 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
+    mediatype: image/png
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - nonResourceURLs:
+          - /metrics
+          verbs:
+          - get
+        - apiGroups:
+          - admissionregistration.k8s.io
+          resources:
+          - mutatingwebhookconfigurations
+          verbs:
+          - create
+          - get
+          - list
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - daemonsets
+          - statefulsets
+          verbs:
+          - create
+          - get
+          - list
+          - update
+          - watch
+        - apiGroups:
+          - config.openshift.io
+          resources:
+          - infrastructures
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - namespaces
+          - nodes
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumes
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods/status
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          - services
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - update
+          - watch
+        - apiGroups:
+          - marketplace.redhat.com
+          resources:
+          - marketplacecsidrivers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - marketplace.redhat.com
+          resources:
+          - marketplacecsidrivers/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - marketplace.redhat.com
+          resources:
+          - marketplacedatasets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - marketplace.redhat.com
+          resources:
+          - marketplacedatasets/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - marketplace.redhat.com
+          resources:
+          - marketplacedriverhealthchecks
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - marketplace.redhat.com
+          resources:
+          - marketplacedriverhealthchecks/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          - clusterroles
+          - rolebindings
+          - roles
+          verbs:
+          - create
+          - get
+          - list
+          - update
+          - watch
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - use
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - csidrivers
+          - storageclasses
+          verbs:
+          - create
+          - get
+          - list
+          - update
+          - watch
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - csinodes
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - volumeattachments
+          verbs:
+          - get
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: default
+      deployments:
+      - name: marketplace-dataset-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app.kubernetes.io/instance: default
+              app.kubernetes.io/managed-by: OLM
+              control-plane: controller-manager
+              redhat.marketplace.com/name: redhat-marketplace-dataset-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                app.kubernetes.io/instance: default
+                app.kubernetes.io/managed-by: OLM
+                control-plane: controller-manager
+                redhat.marketplace.com/name: redhat-marketplace-dataset-operator
+            spec:
+              containers:
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-addr=127.0.0.1:8080
+                - --enable-leader-election
+                command:
+                - /manager
+                env:
+                - name: POD_NAME
+                  value: redhat-marketplace-dataset-operator
+                image: quay.io/grishgo/marketplace-dataset-operator:0.0.2
+                name: manager
+                ports:
+                - containerPort: 9443
+                  name: webhook-server
+                  protocol: TCP
+                resources:
+                  requests:
+                    cpu: 100m
+                    memory: 100Mi
+                volumeMounts:
+                - mountPath: /tmp/k8s-webhook-server/serving-certs
+                  name: cert
+                  readOnly: true
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: registry.redhat.io/openshift4/ose-kube-rbac-proxy:v4.5
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                resources: {}
+              terminationGracePeriodSeconds: 10
+              volumes:
+              - name: cert
+                secret:
+                  defaultMode: 420
+                  secretName: marketplace-dataset-controller-manager-service-cert
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps/status
+          verbs:
+          - get
+          - update
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: default
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: true
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - red hat marketplace
+  - dataset
+  - csi driver
+  links:
+  - name: Visit the marketplace!
+    url: https://marketplace.redhat.com/en-us
+  - name: About
+    url: https://marketplace.redhat.com/en-us/about
+  - name: Support
+    url: https://marketplace.redhat.com/en-us/support
+  maturity: alpha
+  provider:
+    name: Red Hat Marketplace
+    url: https://marketplace.redhat.com/en-us
+  version: 0.0.2
+  webhookdefinitions:
+  - admissionReviewVersions:
+    - v1beta1
+    containerPort: 9443
+    deploymentName: marketplace-dataset-controller-manager
+    failurePolicy: Ignore
+    generateName: webhook.csi.rhm
+    rules:
+    - apiGroups:
+      - ""
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      resources:
+      - pods
+    sideEffects: None
+    targetPort: 9443
+    type: MutatingAdmissionWebhook
+    webhookPath: /rhm-csi-mutate-v1-pod

@@ -1,0 +1,6 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: cms-medicare-charges
+spec:
+  bucket: rhmccp-2f1cb8d0-442b-478f-8847-3d82f9f8144c

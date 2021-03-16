@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: csi-rhm-cos-csi-role
+  namespace: ${NAMESPACE}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  - apiGroups: [ "marketplace.redhat.com" ]
+    resources: [ "marketplacecsidrivers" ]
+    verbs: [ "get" ]

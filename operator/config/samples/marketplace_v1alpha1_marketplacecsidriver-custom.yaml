@@ -1,0 +1,18 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceCSIDriver
+metadata:
+  name: marketplacecsidriver
+spec:
+  endpoint: "s3.us.cloud-object-storage.appdomain.cloud"
+  mountRootPath: "/var/redhat-marketplace/datasets"
+  healthCheckIntervalInMinutes: 60
+  mountOptions:
+    - "kernel_cache"
+    - "max_background=1000"
+    - "max_stat_cache_size=100000"
+    - "multipart_size=52"
+    - "parallel_count=30"
+    - "multireq_max=30"
+  credential:
+    name: "redhat-marketplace-pull-secret"
+    type: "rhm-pull-secret"

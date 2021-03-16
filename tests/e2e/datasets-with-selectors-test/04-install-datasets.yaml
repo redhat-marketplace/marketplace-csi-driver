@@ -1,0 +1,23 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: dataset1
+  namespace: default
+spec:
+  bucket: rhmccp-ae4ac7b9-38e6-4c5f-8e5b-566b7cfed37d
+  podSelectors:
+    - matchLabels:
+        "test-label-1": "value1"
+        "test-label-2": "value2"
+---
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: dataset2
+  namespace: default
+spec:
+  bucket: rhmccp-36eee7f7-21df-4748-b68e-ac0a55a1f887
+  podSelectors:
+    - matchLabels:
+        "test-label-1": "value3"
+        "test-label-2": "value4"        

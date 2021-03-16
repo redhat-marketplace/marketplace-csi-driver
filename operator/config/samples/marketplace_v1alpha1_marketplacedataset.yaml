@@ -1,0 +1,6 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: us-labor-stats
+spec:
+  bucket: rhmccp-ae4ac7b9-38e6-4c5f-8e5b-566b7cfed37d

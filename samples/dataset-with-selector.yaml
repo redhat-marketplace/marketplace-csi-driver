@@ -1,0 +1,18 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: fortune-500-headquarters
+spec:
+  bucket: rhmccp-36eee7f7-21df-4748-b68e-ac0a55a1f887
+  podSelectors:
+    - matchExpressions:
+      - key: test-label-1
+        operator: In
+        values:
+          - "value1"
+          - "value3"
+      - key: test-label-2
+        operator: In
+        values:
+          - "value2"
+          - "value4"

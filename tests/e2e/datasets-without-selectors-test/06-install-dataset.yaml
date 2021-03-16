@@ -1,0 +1,7 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: dataset2
+  namespace: default
+spec:
+  bucket: rhmccp-36eee7f7-21df-4748-b68e-ac0a55a1f887

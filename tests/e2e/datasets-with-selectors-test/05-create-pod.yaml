@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csi-rhm-cos-nginx-auto-1
+  namespace: default
+  labels:
+    test-label-1: value1
+    test-label-2: value2
+spec:
+  containers:
+    - name: csi-rhm-cos-test-nginx
+      image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csi-rhm-cos-nginx-auto-2
+  namespace: default
+  labels:
+    test-label-1: value3
+    test-label-2: value4
+spec:
+  containers:
+    - name: csi-rhm-cos-test-nginx
+      image: nginx

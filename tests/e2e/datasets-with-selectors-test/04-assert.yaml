@@ -1,0 +1,21 @@
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: dataset1
+  namespace: default
+status:
+  conditions:
+    - type: Install
+      status: 'True'
+      reason: InstallComplete
+---
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceDataset
+metadata:
+  name: dataset2
+  namespace: default
+status:
+  conditions:
+    - type: Install
+      status: 'True'
+      reason: InstallComplete

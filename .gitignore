@@ -1,0 +1,10 @@
+**/bin
+**/testbin
+**/.DS_Store
+**/pkg/.DS_Store
+**/.idea
+**/kubeconfig
+**/cover.out
+
+redhat-marketplace-pull-secret.env
+

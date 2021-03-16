@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: csi-rhm-cos-ss
+  namespace: ${NAMESPACE}
+  labels:
+    app: csi-rhm-cos-ss
+spec:
+  selector:
+    app: csi-rhm-cos-ss
+  ports:
+    - name: dummy
+      port: 12345

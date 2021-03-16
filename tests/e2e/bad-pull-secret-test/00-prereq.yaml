@@ -1,0 +1,7 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  - timeout: 30
+    script: |
+      kubectl delete pods --namespace default --all |
+      if [ "$SKIP_DEPLOY" == "" ] ; then cd ../../../operator && kubectl apply -f deploy/dev-operator.yaml ; else echo "skipping deploy" ; fi

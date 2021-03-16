@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: csi-rhm-cos-ds
+status:
+  phase: Running
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: csi-rhm-cos-ctrl
+status:
+  phase: Running
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: csi-rhm-cos-ss
+status:
+  phase: Running
+---
+apiVersion: marketplace.redhat.com/v1alpha1
+kind: MarketplaceCSIDriver
+metadata:
+  name: marketplacecsidriver
+status:
+  conditions:
+    - type: DriverStatus
+      status: 'False'
+      reason: CredentialError
+    - type: Install
+      status: 'True'
+      reason: InstallComplete
+      message: Driver install complete
