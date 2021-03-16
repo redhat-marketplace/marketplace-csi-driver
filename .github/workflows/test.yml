@@ -1,10 +1,5 @@
 name: Test
-on:
-  push:
-    branches:
-    - main
-    - feature/**
-    - feature-pipeline
+on: [push, pull_request]
 env:
   IMAGE_REGISTRY: quay.io/rh-marketplace
 jobs:
@@ -41,7 +36,7 @@ jobs:
     - name: Test Operator
       run: |-
         cd operator
-        make testcir
+        make testci
     - name: Test Driver
       run: |-
         cd driver
