@@ -39,3 +39,7 @@ jobs:
       run: |-
         cd driver
         make test
+    - name: Publish base image
+      run: |-
+        readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
+        echo "last commit log: $last_commit_log"
