@@ -1,4 +1,4 @@
-VERSION ?= 0.0.3
+VERSION ?= 1.0.0
 
 PWD := $(shell pwd)
 BASE_DIR := $(shell basename $(PWD))
