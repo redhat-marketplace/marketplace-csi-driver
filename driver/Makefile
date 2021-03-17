@@ -1,4 +1,4 @@
-VERSION ?= 0.0.1
+VERSION ?= 0.0.3
 
 PWD := $(shell pwd)
 BASE_DIR := $(shell basename $(PWD))
@@ -9,7 +9,7 @@ DRIVER_IMAGE_NAME = marketplace-csi-driver
 DRIVER_IMAGE_TAG ?= $(VERSION)
 DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME):$(DRIVER_IMAGE_TAG)
 
-BASE_IMAGE_VERSION ?= 0.0.1
+BASE_IMAGE_VERSION ?= 0.0.3
 BASE_IMAGE_NAME = marketplace-csi-driver-rhel-base
 BASE_IMAGE ?= $(IMAGE_REGISTRY)/$(BASE_IMAGE_NAME):$(BASE_IMAGE_VERSION)
 

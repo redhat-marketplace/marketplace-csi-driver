@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.0.2
+VERSION ?= 0.0.3
 # Default bundle image tag
 BUNDLE_IMG ?= controller-bundle:$(VERSION)
 # Options for 'bundle-build'
@@ -18,7 +18,7 @@ OPERATOR_IMAGE_NAME = marketplace-dataset-operator
 OPERATOR_IMAGE_TAG ?= $(TAG)
 OPERATOR_IMAGE ?= $(IMAGE_REGISTRY)/$(OPERATOR_IMAGE_NAME):$(OPERATOR_IMAGE_TAG)
 
-DRIVER_IMAGE_VERSION ?= 0.0.1
+DRIVER_IMAGE_VERSION ?= 0.0.3
 DRIVER_IMAGE_NAME = marketplace-csi-driver
 DRIVER_IMAGE_TAG ?= $(BASE_IMAGE_VERSION)
 DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME)
