@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.0.2
+VERSION ?= 1.0.0
 # Default bundle image tag
 BUNDLE_IMG ?= controller-bundle:$(VERSION)
 # Options for 'bundle-build'
@@ -18,11 +18,13 @@ OPERATOR_IMAGE_NAME = marketplace-dataset-operator
 OPERATOR_IMAGE_TAG ?= $(TAG)
 OPERATOR_IMAGE ?= $(IMAGE_REGISTRY)/$(OPERATOR_IMAGE_NAME):$(OPERATOR_IMAGE_TAG)
 
-DRIVER_IMAGE_VERSION ?= 0.0.1
-DRIVER_IMAGE_NAME = marketplace-csi-driver
-DRIVER_IMAGE_TAG ?= $(BASE_IMAGE_VERSION)
-DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME)
+BUNDLE_IMAGE_VERSION ?= 1.0.0
+BUNDLE_IMAGE_NAME = marketplace-dataset-operator-manifest
+BUNDLE_IMAGE ?= $(IMAGE_REGISTRY)/$(BUNDLE_IMAGE_NAME):$(BUNDLE_IMAGE_VERSION)
 
+DRIVER_IMAGE_VERSION ?= 1.0.0
+DRIVER_IMAGE_NAME = marketplace-csi-driver
+DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME)
 LDFLAGS := "-X main.driverVersion=$(DRIVER_IMAGE_VERSION) -X main.driverImage=$(DRIVER_IMAGE)"
 
 QUAY_EXPIRATION?=never
@@ -154,7 +156,12 @@ bundle: manifests kustomize
 	$(KUSTOMIZE) build config/manifests | operator-sdk generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
 	operator-sdk bundle validate ./bundle
 
-# Build the bundle image.
-.PHONY: bundle-build 
-bundle-build:
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+# Publish the bundle image.
+.PHONY: bundle-push
+bundle-push:
+	docker build -f bundle.Dockerfile \
+		--label com.redhat.openshift.versions="v4.5,v4.6,v4.7" \
+		--label com.redhat.delivery.operator.bundle=true \
+		--label com.redhat.delivery.backport=true \
+		--tag $(BUNDLE_IMAGE) --push .
+	
