@@ -63,8 +63,7 @@ docker-publish:
 		--build-arg name="CSI Driver" \
 		--build-arg ldflags=$(LDFLAGS) \
 		--build-arg app_version="$(VERSION)" \
-		--build-arg quay_expiration="$(QUAY_EXPIRATION)" .
-	docker push ${DRIVER_IMAGE}
+		--build-arg quay_expiration="$(QUAY_EXPIRATION)" --push .
 
 docker-publish-full:
 	docker build --tag ${DRIVER_IMAGE} \
@@ -72,12 +71,10 @@ docker-publish-full:
 		--build-arg ldflags=$(LDFLAGS) \
 		--build-arg app_version="$(VERSION)" \
 		--build-arg quay_expiration="$(QUAY_EXPIRATION)" \
-		-f Dockerfile.full . 
-	docker push ${DRIVER_IMAGE}
+		--push -f Dockerfile.full . 
 
 docker-publish-base:
-	docker build --no-cache --tag ${BASE_IMAGE} -f Dockerfile.base .
-	docker push ${BASE_IMAGE}
+	docker build --no-cache --tag ${BASE_IMAGE} --push -f Dockerfile.base .
 
 fmt:
 	go fmt ./...
