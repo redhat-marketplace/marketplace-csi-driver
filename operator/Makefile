@@ -12,7 +12,7 @@ endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
 TAG ?= $(VERSION)
-IMAGE_REGISTRY ?= quay.io/grishgo
+IMAGE_REGISTRY ?= quay.io/rh-marketplace
 
 OPERATOR_IMAGE_NAME = marketplace-dataset-operator
 OPERATOR_IMAGE_TAG ?= $(TAG)

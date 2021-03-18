@@ -766,7 +766,7 @@ spec:
         env:
         - name: POD_NAME
           value: redhat-marketplace-dataset-operator
-        image: quay.io/grishgo/marketplace-dataset-operator:0.0.1
+        image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.0
         name: manager
         ports:
         - containerPort: 9443

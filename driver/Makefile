@@ -3,7 +3,7 @@ VERSION ?= 1.0.0
 PWD := $(shell pwd)
 BASE_DIR := $(shell basename $(PWD))
 
-IMAGE_REGISTRY ?= quay.io/grishgo
+IMAGE_REGISTRY ?= quay.io/rh-marketplace
 
 DRIVER_IMAGE_NAME = marketplace-csi-driver
 DRIVER_IMAGE_TAG ?= $(VERSION)
