@@ -6,7 +6,7 @@ Link (if applicable):
 ### Checklist
 
 - [ ] E2E tests pass
-- [ ] Tests are included
+- [ ] Unit tests are included
 - [ ] Driver version updated (if applicable)
 - [ ] Operator version updated (if applicable)
 - [ ] Operator bundle version updated (if applicable)
