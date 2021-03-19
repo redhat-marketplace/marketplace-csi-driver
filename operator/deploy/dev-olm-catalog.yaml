@@ -5,4 +5,4 @@ metadata:
   namespace: openshift-marketplace
 spec:
   sourceType: grpc
-  image: quay.io/grishgo/my-catalog:1.0.53
+  image: quay.io/grishgo/marketplace-csi-catalog:1.0.0
