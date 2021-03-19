@@ -14,7 +14,7 @@ COPY LICENSE .
 # Build CSI Driver
 RUN CGO_ENABLED=0 GO111MODULE=on go build -ldflags "${ldflags}" -a -o marketplacecsidriver ./cmd/main.go
 
-FROM quay.io/grishgo/marketplace-csi-driver-rhel-base:1.0.0
+FROM quay.io/rh-marketplace/marketplace-csi-driver-rhel-base:1.0.0
 
 ARG name
 ARG app_version
