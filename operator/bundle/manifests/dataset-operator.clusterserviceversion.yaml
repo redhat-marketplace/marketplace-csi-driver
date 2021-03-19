@@ -71,7 +71,7 @@ spec:
       name: marketplacedriverhealthchecks.marketplace.redhat.com
       version: v1alpha1
   description: |
-    The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into customer workloads.
+    The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into OpenShift workloads.
     ### Installation
     1. Create or get your pull secret from [Red Hat Marketplace](https://marketplace.redhat.com/en-us/documentation/clusters#get-pull-secret).
 
