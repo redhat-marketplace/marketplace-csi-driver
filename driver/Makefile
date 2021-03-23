@@ -1,4 +1,4 @@
-VERSION ?= 1.0.0
+VERSION ?= 1.0.1
 
 PWD := $(shell pwd)
 BASE_DIR := $(shell basename $(PWD))
@@ -9,7 +9,7 @@ DRIVER_IMAGE_NAME = marketplace-csi-driver
 DRIVER_IMAGE_TAG ?= $(VERSION)
 DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME):$(DRIVER_IMAGE_TAG)
 
-BASE_IMAGE_VERSION ?= 1.0.0
+BASE_IMAGE_VERSION ?= 1.0.1
 BASE_IMAGE_NAME = marketplace-csi-driver-rhel-base
 BASE_IMAGE ?= $(IMAGE_REGISTRY)/$(BASE_IMAGE_NAME):$(BASE_IMAGE_VERSION)
 
@@ -63,7 +63,9 @@ docker-publish:
 		--build-arg name="CSI Driver" \
 		--build-arg ldflags=$(LDFLAGS) \
 		--build-arg app_version="$(VERSION)" \
-		--build-arg quay_expiration="$(QUAY_EXPIRATION)" --push .
+		--build-arg quay_expiration="$(QUAY_EXPIRATION)" \
+		--build-arg driver_base_image="$(BASE_IMAGE)" \
+		--push .
 
 docker-publish-full:
 	docker build --tag ${DRIVER_IMAGE} \
@@ -75,6 +77,20 @@ docker-publish-full:
 
 docker-publish-base:
 	docker build --no-cache --tag ${BASE_IMAGE} --push -f Dockerfile.base .
+
+docker-publish-dev:
+	docker build --tag ${DRIVER_IMAGE} \
+		--build-arg name="CSI Driver" \
+		--build-arg ldflags=$(LDFLAGS) \
+		--build-arg app_version="$(VERSION)" \
+		--build-arg quay_expiration="$(QUAY_EXPIRATION)" \
+		--build-arg driver_base_image="$(BASE_IMAGE)" . 
+	docker push ${DRIVER_IMAGE}
+
+docker-publish-base-dev:
+	docker build --no-cache --tag ${BASE_IMAGE} -f Dockerfile.base .
+	docker push ${BASE_IMAGE}
+
 
 fmt:
 	go fmt ./...

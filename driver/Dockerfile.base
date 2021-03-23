@@ -1,6 +1,7 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest
+FROM --platform=${BUILDPLATFORM} registry.access.redhat.com/ubi8/ubi:latest
 
 ARG S3FS_VERSION=v1.88
+ARG TARGETARCH=amd64
 
 WORKDIR /
 
@@ -8,7 +9,7 @@ WORKDIR /
 # RHEL hacks
 # https://github.com/s3fs-fuse/s3fs-fuse/wiki/Installation-Notes#rhel6centos-6-s3fs-version--174
 RUN yum remove -y fuse fuse-s3fs
-RUN yum install -y wget gcc libstdc++-devel gcc-c++ openssl-devel mailcap curl-devel libxml2-devel git make automake fuse-libs
+RUN yum install -y wget gcc libstdc++-devel gcc-c++ openssl-devel mailcap curl-devel libxml2-devel git make automake fuse-libs sudo
 RUN cd /usr/src/ ;\
     wget https://github.com/libfuse/libfuse/releases/download/fuse_2_9_4/fuse-2.9.4.tar.gz ; \
     tar xzf fuse-2.9.4.tar.gz ; \
@@ -28,7 +29,7 @@ RUN cd / ; \
     make ; \
     make install ; \
     make clean; 
-
+    
 RUN yum remove -y git automake autoconf wget
 
 RUN echo "user_allow_other" > /etc/fuse.conf

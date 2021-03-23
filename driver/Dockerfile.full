@@ -1,5 +1,6 @@
 FROM golang:1.15-alpine as builder
 ARG ldflags
+ARG TARGETARCH=amd64
 
 WORKDIR /workspace
 COPY go.mod go.mod
@@ -36,7 +37,7 @@ WORKDIR /
 # RHEL hacks
 # https://github.com/s3fs-fuse/s3fs-fuse/wiki/Installation-Notes#rhel6centos-6-s3fs-version--174
 RUN yum remove -y fuse fuse-s3fs
-RUN yum install -y wget gcc libstdc++-devel gcc-c++ openssl-devel mailcap curl-devel libxml2-devel git make automake fuse-libs
+RUN yum install -y wget gcc libstdc++-devel gcc-c++ openssl-devel mailcap curl-devel libxml2-devel git make automake fuse-libs sudo
 RUN cd /usr/src/ ;\
     wget https://github.com/libfuse/libfuse/releases/download/fuse_2_9_4/fuse-2.9.4.tar.gz ; \
     tar xzf fuse-2.9.4.tar.gz ; \
@@ -61,7 +62,16 @@ RUN yum remove -y git automake autoconf wget
 
 RUN echo "user_allow_other" > /etc/fuse.conf
 
+ENV USER_UID=1001 \
+  USER_NAME=redhat-marketplace-operator \
+  BINFILE=marketplacecsidriver
+
 COPY --from=builder /workspace/marketplacecsidriver /usr/local/bin
+COPY hack/docker/entrypoint /usr/local/bin/entrypoint
+COPY hack/docker/user_setup /usr/local/bin/user_setup
 COPY LICENSE /licenses/
 
-ENTRYPOINT ["/usr/local/bin/marketplacecsidriver"]
+RUN  /usr/local/bin/user_setup
+USER ${USER_UID}
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]

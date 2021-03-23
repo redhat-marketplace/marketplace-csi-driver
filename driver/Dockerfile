@@ -1,3 +1,5 @@
+ARG driver_base_image
+
 FROM golang:1.15-alpine as builder
 ARG ldflags
 
@@ -14,7 +16,7 @@ COPY LICENSE .
 # Build CSI Driver
 RUN CGO_ENABLED=0 GO111MODULE=on go build -ldflags "${ldflags}" -a -o marketplacecsidriver ./cmd/main.go
 
-FROM quay.io/rh-marketplace/marketplace-csi-driver-rhel-base:1.0.0
+FROM ${driver_base_image}
 
 ARG name
 ARG app_version
@@ -29,11 +31,21 @@ LABEL name="Red Hat Marketplace ${name}" \
   version="${app_version}" \
   quay.expires-after=${quay_expiration}
 
+ENV USER_UID=1001 \
+  USER_NAME=redhat-marketplace-operator \
+  BINFILE=marketplacecsidriver
+
 WORKDIR /
 
 RUN echo "user_allow_other" > /etc/fuse.conf
 
-COPY --from=builder /workspace/marketplacecsidriver /usr/local/bin
+COPY --from=builder /workspace/marketplacecsidriver /usr/local/bin/marketplacecsidriver
+COPY hack/docker/entrypoint /usr/local/bin/entrypoint
+COPY hack/docker/user_setup /usr/local/bin/user_setup
 COPY LICENSE /licenses/
 
-ENTRYPOINT ["/usr/local/bin/marketplacecsidriver"]
+RUN /usr/local/bin/user_setup
+
+USER ${USER_UID}
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]

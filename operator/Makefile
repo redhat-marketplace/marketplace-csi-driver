@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 1.0.0
+VERSION ?= 1.0.1
 # Default bundle image tag
 BUNDLE_IMG ?= controller-bundle:$(VERSION)
 # Options for 'bundle-build'
@@ -18,11 +18,11 @@ OPERATOR_IMAGE_NAME = marketplace-dataset-operator
 OPERATOR_IMAGE_TAG ?= $(TAG)
 OPERATOR_IMAGE ?= $(IMAGE_REGISTRY)/$(OPERATOR_IMAGE_NAME):$(OPERATOR_IMAGE_TAG)
 
-BUNDLE_IMAGE_VERSION ?= 1.0.0
+BUNDLE_IMAGE_VERSION ?= 1.0.1
 BUNDLE_IMAGE_NAME = marketplace-dataset-operator-manifest
 BUNDLE_IMAGE ?= $(IMAGE_REGISTRY)/$(BUNDLE_IMAGE_NAME):$(BUNDLE_IMAGE_VERSION)
 
-DRIVER_IMAGE_VERSION ?= 1.0.0
+DRIVER_IMAGE_VERSION ?= 1.0.1
 DRIVER_IMAGE_NAME = marketplace-csi-driver
 DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME)
 LDFLAGS := "-X main.driverVersion=$(DRIVER_IMAGE_VERSION) -X main.driverImage=$(DRIVER_IMAGE)"
@@ -164,4 +164,12 @@ bundle-push:
 		--label com.redhat.delivery.operator.bundle=true \
 		--label com.redhat.delivery.backport=true \
 		--tag $(BUNDLE_IMAGE) --push .
+
+bundle-push-dev:
+	docker build -f bundle.Dockerfile \
+		--label com.redhat.openshift.versions="v4.5,v4.6,v4.7" \
+		--label com.redhat.delivery.operator.bundle=true \
+		--label com.redhat.delivery.backport=true \
+		--tag $(BUNDLE_IMAGE) .
+	docker push $(BUNDLE_IMAGE)
 	
