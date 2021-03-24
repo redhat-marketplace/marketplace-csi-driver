@@ -93,7 +93,7 @@ jobs:
         if ! [[ ${last_commit_log} =~ .*skipbundle.* ]]; then
           echo "Publish bundle image"
           cd operator
-          make bundle
+          make bundle CHANNELS=alpha DEFAULT_CHANNEL=alpha
           make bundle-push
         else
           echo "Skip publish operator image"
