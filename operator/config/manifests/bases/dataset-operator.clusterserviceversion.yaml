@@ -4,6 +4,10 @@ metadata:
   annotations:
     alm-examples: '[]'
     capabilities: Full Lifecycle
+    categories: Developer Tools
+    containerImage: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.0
+    createdAt: "2021-03-24T22:29:02Z"
+    description: The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into OpenShift workloads.
     operatorframework.io/suggested-namespace: openshift-operators
     repository: https://github.com/redhat-marketplace/marketplace-csi-driver
     support: IBM Corporation
@@ -87,8 +91,10 @@ spec:
     url: https://marketplace.redhat.com/en-us/about
   - name: Support
     url: https://marketplace.redhat.com/en-us/support
+  maintainers:
+  - email: rhmoper@us.ibm.com
+    name: RHM Operator Team
   maturity: alpha
   provider:
     name: Red Hat Marketplace
-    url: https://marketplace.redhat.com/en-us
   version: 0.0.0
