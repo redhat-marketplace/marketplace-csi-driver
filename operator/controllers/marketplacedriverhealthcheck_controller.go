@@ -75,27 +75,24 @@ func (r *MarketplaceDriverHealthCheckReconciler) Reconcile(req ctrl.Request) (ct
 		return ctrl.Result{}, nil
 	}
 
-	requeue, updateNeeded := r.updateHealthCheckCondition(hc)
-	if updateNeeded {
-		updError := r.Client.Status().Update(ctx, hc)
-		if updError != nil {
-			log.Error(updError, "failed to update health check status")
-			return ctrl.Result{}, err
-		}
+	requeue := r.updateHealthCheckCondition(hc)
+	updError := r.Client.Status().Update(ctx, hc)
+	if updError != nil {
+		log.Error(updError, "failed to update health check status")
+		return ctrl.Result{}, err
 	}
 
 	return ctrl.Result{RequeueAfter: requeue}, nil
 }
 
-func (r *MarketplaceDriverHealthCheckReconciler) updateHealthCheckCondition(hc *marketplacev1alpha1.MarketplaceDriverHealthCheck) (time.Duration, bool) {
+func (r *MarketplaceDriverHealthCheckReconciler) updateHealthCheckCondition(hc *marketplacev1alpha1.MarketplaceDriverHealthCheck) time.Duration {
 	requeue := time.Minute * 5
-	updateNeeded := false
 	if len(hc.Spec.AffectedNodes) > len(hc.Status.DriverHealthCheckStatus) {
 		waitTime := time.Now().Sub(hc.CreationTimestamp.Time)
 		if waitTime.Minutes() > pollingBackOffTimeInMinutes {
 			requeue = time.Minute * 60
 		}
-		updateNeeded = hc.Status.Conditions.SetCondition(status.Condition{
+		hc.Status.Conditions.SetCondition(status.Condition{
 			Type:    common.ConditionTypeHealthCheck,
 			Reason:  common.ReasonRepairInProgress,
 			Status:  corev1.ConditionFalse,
@@ -113,7 +110,7 @@ func (r *MarketplaceDriverHealthCheckReconciler) updateHealthCheckCondition(hc *
 				break
 			}
 		}
-		updateNeeded = hc.Status.Conditions.SetCondition(status.Condition{
+		hc.Status.Conditions.SetCondition(status.Condition{
 			Type:    common.ConditionTypeHealthCheck,
 			Reason:  reason,
 			Status:  rstatus,
@@ -121,7 +118,7 @@ func (r *MarketplaceDriverHealthCheckReconciler) updateHealthCheckCondition(hc *
 		})
 		requeue = time.Minute * time.Duration(keepTimeInMinutes)
 	}
-	return requeue, updateNeeded
+	return requeue
 }
 
 func (r *MarketplaceDriverHealthCheckReconciler) SetupWithManager(mgr ctrl.Manager) error {
