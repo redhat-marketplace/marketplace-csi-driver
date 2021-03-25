@@ -83,17 +83,12 @@ jobs:
         else
           echo "Skip publish operator image"
         fi
-    - name: Get operator sdk
-      uses: jpkrohling/setup-operator-sdk@v1.1.0
-      with:
-        operator-sdk-version: v1.4.0
     - name: Publish bundle image
       run: |-
         readonly local last_commit_log=$(git log -1 --pretty=format:"%s")
         if ! [[ ${last_commit_log} =~ .*skipbundle.* ]]; then
           echo "Publish bundle image"
           cd operator
-          make bundle CHANNELS=alpha DEFAULT_CHANNEL=alpha
           make bundle-push
         else
           echo "Skip publish operator image"

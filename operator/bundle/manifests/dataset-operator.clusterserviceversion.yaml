@@ -53,7 +53,7 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/redhat-marketplace/marketplace-csi-driver
     support: IBM Corporation
-  name: dataset-operator.v1.0.0
+  name: dataset-operator.v1.0.1
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -64,16 +64,28 @@ spec:
       kind: MarketplaceCSIDriver
       name: marketplacecsidrivers.marketplace.redhat.com
       version: v1alpha1
+      resources:
+        - kind: CSIDriver
+          version: storage.k8s.io/v1beta1
+          name: csi.rhm.cos.ibm.com
     - description: MarketplaceDataset is the resource identifying a purchased dataset from Red Hat Marketplace
       displayName: Marketplace Dataset
       kind: MarketplaceDataset
       name: marketplacedatasets.marketplace.redhat.com
       version: v1alpha1
+      resources:
+        - kind: PersistentVolumeClaim
+          version: v1
+          name: csi-rhm-cos-pvc
     - description: MarketplaceDriverHealthCheck is used by the Operator to trigger mounted volume check and repair
       displayName: Marketplace Driver Health Check
       kind: MarketplaceDriverHealthCheck
       name: marketplacedriverhealthchecks.marketplace.redhat.com
       version: v1alpha1
+      resources:
+        - kind: PersistentVolumeClaim
+          version: v1
+          name: csi-rhm-cos-pvc
   description: |
     The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into OpenShift workloads.
     ### Installation
@@ -371,7 +383,7 @@ spec:
                 env:
                 - name: POD_NAME
                   value: redhat-marketplace-dataset-operator
-                image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.0
+                image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.1
                 name: manager
                 ports:
                 - containerPort: 9443
@@ -459,7 +471,7 @@ spec:
   maturity: alpha
   provider:
     name: Red Hat Marketplace
-  version: 1.0.0
+  version: 1.0.1
   webhookdefinitions:
   - admissionReviewVersions:
     - v1beta1
