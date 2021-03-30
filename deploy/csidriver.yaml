@@ -3,6 +3,8 @@ kind: MarketplaceCSIDriver
 metadata:
   name: marketplacecsidriver
   namespace: openshift-redhat-marketplace
+  labels:
+    razee/watch-resource: lite
 spec:
   endpoint: "s3.us.cloud-object-storage.appdomain.cloud"
   mountRootPath: "/var/redhat-marketplace/datasets"
