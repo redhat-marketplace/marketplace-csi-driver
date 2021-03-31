@@ -1,4 +1,4 @@
-VERSION ?= 1.0.0
+VERSION ?= 1.0.1
 
 PWD := $(shell pwd)
 BASE_DIR := $(shell basename $(PWD))
@@ -9,7 +9,7 @@ DRIVER_IMAGE_NAME = marketplace-csi-driver
 DRIVER_IMAGE_TAG ?= $(VERSION)
 DRIVER_IMAGE ?= $(IMAGE_REGISTRY)/$(DRIVER_IMAGE_NAME):$(DRIVER_IMAGE_TAG)
 
-BASE_IMAGE_VERSION ?= 1.0.0
+BASE_IMAGE_VERSION ?= 1.0.1
 BASE_IMAGE_NAME = marketplace-csi-driver-rhel-base
 BASE_IMAGE ?= $(IMAGE_REGISTRY)/$(BASE_IMAGE_NAME):$(BASE_IMAGE_VERSION)
 
@@ -23,7 +23,7 @@ export TESTARGS ?= $(TESTARGS_DEFAULT)
 DEST := $(GOPATH)/src/$(GIT_HOST)/$(BASE_DIR)
 
 LDFLAGS := "-X main.version=$(DRIVER_IMAGE_TAG)"
-PLATFORMS ?= linux/amd64
+PLATFORMS ?= linux/amd64,linux/ppc64le,linux/s390x
 
 LOCAL_OS := $(shell uname)
 ifeq ($(LOCAL_OS),Linux)
@@ -59,22 +59,25 @@ push-image: build-image
 	@docker push $(DRIVER_IMAGE)
 
 docker-publish:
-	docker build --tag ${DRIVER_IMAGE} \
+	docker buildx build --tag ${DRIVER_IMAGE} \
 		--build-arg name="CSI Driver" \
 		--build-arg ldflags=$(LDFLAGS) \
 		--build-arg app_version="$(VERSION)" \
+		--build-arg driver_base_image="$(BASE_IMAGE)" \
+		--platform $(PLATFORMS) \
 		--build-arg quay_expiration="$(QUAY_EXPIRATION)" --push .
 
 docker-publish-full:
-	docker build --tag ${DRIVER_IMAGE} \
+	docker buildx build --tag ${DRIVER_IMAGE} \
 		--build-arg name="CSI Driver" \
 		--build-arg ldflags=$(LDFLAGS) \
 		--build-arg app_version="$(VERSION)" \
 		--build-arg quay_expiration="$(QUAY_EXPIRATION)" \
+		--platform $(PLATFORMS) \
 		--push -f Dockerfile.full . 
 
 docker-publish-base:
-	docker build --no-cache --tag ${BASE_IMAGE} --push -f Dockerfile.base .
+	docker buildx build --no-cache --tag ${BASE_IMAGE} --platform $(PLATFORMS) --push -f Dockerfile.base .
 
 fmt:
 	go fmt ./...

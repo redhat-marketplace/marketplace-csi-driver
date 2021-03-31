@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest
+FROM --platform=${BUILDPLATFORM} registry.access.redhat.com/ubi8/ubi:latest
 
 ARG S3FS_VERSION=v1.88
 
