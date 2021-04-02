@@ -1,42 +1,45 @@
 #!/bin/bash
 set -e
 
-TARGET_FLAG="amd64-*-linux"
+TARGET_FLAG=""
 
-if [ "$1" = “ppc64le” ]; then
-    TARGET_FLAG="powerpcle-*-linux"
-elif [ "$1" = “s390x” ]; then
-    TARGET_FLAG="s390x-*-linux"
-fi
+function settarget()
+{
+    build=$(./config.guess)
+    if [ "$1" = “ppc64le” ]; then
+        TARGET_FLAG="--build=${build} --host=powerpc64le-*linux*"
+    elif [ "$1" = “s390x” ]; then
+        TARGET_FLAG="--build=${build} --host=s390x-*linux*"
+    fi
+}
 
 # Build S3FS-FUSE
 # RHEL hacks
 # https://github.com/s3fs-fuse/s3fs-fuse/wiki/Installation-Notes#rhel6centos-6-s3fs-version--174
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig 
+
 yum remove -y fuse fuse-s3fs
 yum install -y wget gcc libstdc++-devel gcc-c++ openssl-devel mailcap curl-devel libxml2-devel git make automake fuse-libs
 cd /usr/src/ 
 wget https://github.com/libfuse/libfuse/releases/download/fuse_2_9_4/fuse-2.9.4.tar.gz 
 tar xzf fuse-2.9.4.tar.gz 
 cd fuse-2.9.4 
-./configure --target=${TARGET_FLAG} && make && make install 
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig 
+settarget $1
+./configure ${TARGET_FLAG} && make && make install 
 echo -e '\\n/usr/local/lib' >> /etc/ld.so.conf 
 ldconfig
 
+export LIBS="-ldl"
 cd / 
 git clone https://github.com/s3fs-fuse/s3fs-fuse.git 
 cd s3fs-fuse
 git checkout tags/$2
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig 
 ./autogen.sh
-./configure --target=${TARGET_FLAG} --prefix=/usr/local 
+settarget $1
+./configure ${TARGET_FLAG} --prefix=/usr/local 
 make
 make install
 make clean
 
-cp /usr/local/bin/${TARGET_FLAG}-s3fs /usr/local/bin/s3fs
-cp /usr/local/bin/${TARGET_FLAG}-ulockmgr_server /usr/local/bin/ulockmgr_server
-cp /usr/local/bin/${TARGET_FLAG}-fusermount /usr/local/bin/fusermount
-
-yum remove -y git automake autoconf wget
+#yum remove -y git automake autoconf wget
 echo "user_allow_other" > /etc/fuse.conf
