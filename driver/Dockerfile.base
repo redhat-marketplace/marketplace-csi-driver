@@ -1,12 +1,12 @@
-FROM --platform=${BUILDPLATFORM} registry.access.redhat.com/ubi8/ubi:latest
 
-ARG S3FS_VERSION=v1.88
-ARG TARGETARCH
+FROM --platform=${BUILDPLATFORM} golang:1.15-alpine as dummy
+
+FROM registry.access.redhat.com/ubi8/ubi:latest
 
 WORKDIR /
 
-COPY hack/docker/s3fs-build /usr/local/bin/s3fs-build
+RUN yum remove -y fuse fuse-s3fs
+RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+RUN yum install -y s3fs-fuse
 
-RUN /usr/local/bin/s3fs-build ${TARGETARCH} ${S3FS_VERSION}
-
-RUN rm usr/local/bin/s3fs-build
+RUN echo "user_allow_other" > /etc/fuse.conf
