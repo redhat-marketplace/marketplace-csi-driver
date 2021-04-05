@@ -45,8 +45,8 @@ metadata:
       ]
     capabilities: Full Lifecycle
     categories: Developer Tools
-    containerImage: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.0
-    createdAt: "2021-03-24T22:29:02Z"
+    containerImage: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.2
+    createdAt: "2021-04-05T22:29:02Z"
     description: The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into OpenShift workloads.
     operatorframework.io/suggested-namespace: openshift-operators
     operators.operatorframework.io/builder: operator-sdk-v1.4.0
