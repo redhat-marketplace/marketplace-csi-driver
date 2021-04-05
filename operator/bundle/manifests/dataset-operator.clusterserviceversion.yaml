@@ -53,6 +53,12 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/redhat-marketplace/marketplace-csi-driver
     support: IBM Corporation
+  labels:
+    operatorframework.io/arch.amd64: supported
+    operatorframework.io/arch.ppc64le: supported
+    operatorframework.io/arch.s390x: supported
+    operatorframework.io/os.linux: supported
+    razee/watch-resource: lite
   name: dataset-operator.v1.0.2
   namespace: placeholder
 spec:
