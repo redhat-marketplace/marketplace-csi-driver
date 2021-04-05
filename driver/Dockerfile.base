@@ -1,34 +1,12 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest
 
-ARG S3FS_VERSION=v1.88
+FROM --platform=${BUILDPLATFORM} golang:1.15-alpine as dummy
+
+FROM registry.access.redhat.com/ubi8/ubi:latest
 
 WORKDIR /
 
-# Build S3FS-FUSE
-# RHEL hacks
-# https://github.com/s3fs-fuse/s3fs-fuse/wiki/Installation-Notes#rhel6centos-6-s3fs-version--174
 RUN yum remove -y fuse fuse-s3fs
-RUN yum install -y wget gcc libstdc++-devel gcc-c++ openssl-devel mailcap curl-devel libxml2-devel git make automake fuse-libs
-RUN cd /usr/src/ ;\
-    wget https://github.com/libfuse/libfuse/releases/download/fuse_2_9_4/fuse-2.9.4.tar.gz ; \
-    tar xzf fuse-2.9.4.tar.gz ; \
-    cd fuse-2.9.4 ; \
-    ./configure && make && make install ; \
-    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig ; \
-    echo -e '\\n/usr/local/lib' >> /etc/ld.so.conf ; \
-    ldconfig
-
-RUN cd / ; \
-    git clone https://github.com/s3fs-fuse/s3fs-fuse.git ;\
-    cd s3fs-fuse; \
-    git checkout tags/${S3FS_VERSION}; \
-    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig ; \
-    ./autogen.sh; \
-    ./configure --prefix=/usr/local ; \
-    make ; \
-    make install ; \
-    make clean; 
-
-RUN yum remove -y git automake autoconf wget
+RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+RUN yum install -y s3fs-fuse
 
 RUN echo "user_allow_other" > /etc/fuse.conf

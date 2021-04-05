@@ -17,8 +17,8 @@ spec:
       priorityClassName: system-node-critical
       containers:
       - name: csi-node-driver-registrar
-        image: quay.io/k8scsi/csi-node-driver-registrar:v1.2.0
-        imagePullPolicy: Always
+        image: registry.redhat.io/openshift4/ose-csi-node-driver-registrar:v4.7.0
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9808
           name: healthz
@@ -59,7 +59,7 @@ spec:
             add: ["SYS_ADMIN"]
           allowPrivilegeEscalation: true
         image: "${DRIVER_IMAGE}:${DRIVER_VERSION}"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         args:
         - "--node-name=$(KUBE_NODE_NAME)"
         # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md
@@ -78,8 +78,8 @@ spec:
         - name: socket-dir
           mountPath: /csi
       - name: liveness-probe
-        imagePullPolicy: Always
-        image: quay.io/k8scsi/livenessprobe:v2.1.0
+        imagePullPolicy: IfNotPresent
+        image: registry.redhat.io/openshift4/ose-csi-livenessprobe:v4.7.0
         args:
         - "--csi-address=$(ADDRESS)"
         env:

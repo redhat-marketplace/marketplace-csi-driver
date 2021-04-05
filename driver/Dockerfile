@@ -1,5 +1,9 @@
-FROM golang:1.15-alpine as builder
+ARG driver_base_image
+
+FROM --platform=${BUILDPLATFORM} golang:1.15-alpine as builder
 ARG ldflags
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /workspace
 COPY go.mod go.mod
@@ -12,9 +16,9 @@ COPY pkg/ pkg/
 COPY LICENSE .
 
 # Build CSI Driver
-RUN CGO_ENABLED=0 GO111MODULE=on go build -ldflags "${ldflags}" -a -o marketplacecsidriver ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GO111MODULE=on go build -ldflags "${ldflags}" -a -o marketplacecsidriver ./cmd/main.go
 
-FROM quay.io/rh-marketplace/marketplace-csi-driver-rhel-base:1.0.0
+FROM ${driver_base_image}
 
 ARG name
 ARG app_version

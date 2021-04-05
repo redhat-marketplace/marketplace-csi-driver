@@ -97,4 +97,5 @@ spec:
   maturity: alpha
   provider:
     name: Red Hat Marketplace
+  replaces: dataset-operator.v1.0.1
   version: 0.0.0
