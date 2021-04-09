@@ -59,7 +59,7 @@ metadata:
     operatorframework.io/arch.s390x: supported
     operatorframework.io/os.linux: supported
     razee/watch-resource: lite
-  name: dataset-operator.v1.0.2
+  name: dataset-operator.v1.0.3
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -377,7 +377,7 @@ spec:
                 env:
                 - name: POD_NAME
                   value: redhat-marketplace-dataset-operator
-                image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.2
+                image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.3
                 name: manager
                 ports:
                 - containerPort: 9443
@@ -466,7 +466,7 @@ spec:
   provider:
     name: Red Hat Marketplace
   replaces: dataset-operator.v1.0.1
-  version: 1.0.2
+  version: 1.0.3
   webhookdefinitions:
   - admissionReviewVersions:
     - v1beta1
