@@ -8,5 +8,7 @@ WORKDIR /
 RUN yum remove -y fuse fuse-s3fs
 RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 RUN yum install -y s3fs-fuse
+RUN yum remove -y epel-release
+RUN yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical
 
 RUN echo "user_allow_other" > /etc/fuse.conf
