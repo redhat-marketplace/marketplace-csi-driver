@@ -97,6 +97,9 @@ var _ = Context("MarketplaceCSIDriver Controller", func() {
 					Name: "redhat-marketplace-pull-secret",
 					Type: "rhm-pull-secret",
 				},
+				EnvironmentVariables: []marketplacev1alpha1.NameValueMap{
+					{Name: "test1", Value: "value1"},
+				},
 			},
 		}
 		r = &MarketplaceCSIDriverReconciler{
@@ -104,6 +107,8 @@ var _ = Context("MarketplaceCSIDriver Controller", func() {
 			Log:    logf.Log.WithName("controllers").WithName("MarketplaceCSIDriver"),
 			Helper: common.NewControllerHelper(),
 		}
+		resourceapply.SetDriverImage("test")
+		resourceapply.SetDriverVersion("test")
 		resourceapply.ResetAssetPlaceHolder()
 		trueVar := true
 		falseVar := false
@@ -1257,6 +1262,68 @@ var _ = Context("MarketplaceCSIDriver Controller", func() {
 		ra.ApplyOLMRbac()
 	})
 
+	It("CSI Driver install error - driver configmap", func() {
+		r.Client = newMarketplaceCSIDriverClient(
+			fake.NewFakeClient(driver),
+			"create",
+			"ConfigMap",
+			"csi-rhm-cos-env",
+		)
+		req := reconcile.Request{
+			NamespacedName: types.NamespacedName{
+				Name:      name,
+				Namespace: namespace,
+			},
+		}
+
+		_, err := r.Reconcile(req)
+		Expect(err).To(HaveOccurred(), "Reconcile should return error for install")
+
+		key := client.ObjectKey{
+			Name:      name,
+			Namespace: namespace,
+		}
+		reason := getMarketplaceCSIDriverStatusReason(ctx, key, r.Client, common.ConditionTypeInstall)
+		Expect(reason).To(Equal("InstallFailed"))
+	})
+
+	It("CSI Driver - configmap change", func() {
+		cmobj, err := ra.GetResource(common.AssetPathDriverEnvironment)
+		Expect(err).NotTo(HaveOccurred(), "Test set up failed")
+		cm := cmobj.(*corev1.ConfigMap)
+		cm.Data["test1"] = "value1"
+
+		crobj, err := ra.GetResource(common.AssetPathRbacCsiClusterRole)
+		Expect(err).NotTo(HaveOccurred(), "Test set up failed")
+		cr := crobj.(*rbacv1.ClusterRole)
+
+		crbobj, err := ra.GetResource(common.AssetPathRbacCsiClusterRoleBinding)
+		Expect(err).NotTo(HaveOccurred(), "Test set up failed")
+		crb := crbobj.(*rbacv1.ClusterRoleBinding)
+
+		cl := newMarketplaceCSIDriverClient(createMarketplaceCSIDriverClientForUpdate(ra, driver), "", "", "")
+		cl.addRuntimeObject(cm)
+		cl.addRuntimeObject(cr)
+		cl.addRuntimeObject(crb)
+		r.Client = cl
+		req := reconcile.Request{
+			NamespacedName: types.NamespacedName{
+				Name:      name,
+				Namespace: namespace,
+			},
+		}
+
+		_, err = r.Reconcile(req)
+		Expect(err).NotTo(HaveOccurred(), "Reconcile returned error for install")
+
+		key := client.ObjectKey{
+			Name:      name,
+			Namespace: namespace,
+		}
+		reason := getMarketplaceCSIDriverStatusReason(ctx, key, r.Client, common.ConditionTypeInstall)
+		Expect(reason).To(Equal("InstallComplete"))
+	})
+
 	It("Resource apply - unsupported resource", func() {
 		_, err := ra.Apply("assets/csi-unit-test.yaml")
 		Expect(err).To(HaveOccurred(), "Expected error for bad resource")
@@ -1355,8 +1422,14 @@ func createMarketplaceCSIDriverClientForUpdate(ra resourceapply.ResourceApply, d
 		Data: data,
 	}
 
+	cmobj, err := ra.GetResource(common.AssetPathDriverEnvironment)
+	Expect(err).NotTo(HaveOccurred(), "Test set up failed")
+	cm := cmobj.(*corev1.ConfigMap)
+	cm.Data["test1"] = "value1"
+	cm.OwnerReferences = []metav1.OwnerReference{ra.Owner}
+
 	return fake.NewFakeClient(driver, ss, sec, dm1, dm2, cs, sc, sa,
-		sv, rr, rrb, cr, crb,
+		sv, rr, rrb, cr, crb, cm,
 		createMarketplaceCSIDriverPod("csi-rhm-cos-ss-1", "csi-rhm-cos-ss"),
 		createMarketplaceCSIDriverPod("csi-rhm-cos-ds-1", "csi-rhm-cos-ds"),
 		createMarketplaceCSIDriverPod("csi-rhm-cos-ctrl-1", "csi-rhm-cos-ctrl"))

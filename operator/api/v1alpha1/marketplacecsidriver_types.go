@@ -38,6 +38,21 @@ type S3Credential struct {
 	Type string `json:"type"`
 }
 
+// NameValueMap defines a name value pair
+// +kubebuilder:object:generate:=true
+type NameValueMap struct {
+
+	// Name for the property
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.displayName="Name"
+	Name string `json:"name"`
+
+	// Value of the property
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.displayName="Value"
+	Value string `json:"value"`
+}
+
 // MarketplaceCSIDriverSpec defines the desired state of MarketplaceCSIDriver
 // +k8s:openapi-gen=true
 type MarketplaceCSIDriverSpec struct {
@@ -63,6 +78,11 @@ type MarketplaceCSIDriverSpec struct {
 	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true
 	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.displayName="Dataset mount path"
 	MountRootPath string `json:"mountRootPath"`
+
+	// EnvironmentVariables is a list of optional environment variables for CSI driver. Change to environment variables will force a restart of the driver.
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true
+	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.displayName="Environment variables"
+	EnvironmentVariables []NameValueMap `json:"environmentVariables,omitempty"`
 
 	// MountOptions is an array of performance options for dataset driver. This is for internal use.
 	// +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors=true

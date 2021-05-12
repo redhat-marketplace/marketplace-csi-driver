@@ -55,6 +55,9 @@ spec:
         - "--node-name=$(KUBE_NODE_NAME)"
         - "--csi-endpoint=unix://$(ADDRESS)"
         - "--v=5"
+        envFrom:
+        - configMapRef:
+            name: csi-rhm-cos-env
         env:
         - name: ADDRESS
           value: /var/lib/csi/sockets/pluginproxy/csi.sock

@@ -41,21 +41,22 @@ rules:
   - ""
   resources:
   - configmaps
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
   - namespaces
   - nodes
   verbs:
   - get
   - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - ""

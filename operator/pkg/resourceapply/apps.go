@@ -17,7 +17,7 @@ limitations under the License.
 package resourceapply
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/redhat-marketplace/marketplace-csi-driver/operator/pkg/common"
 	appsv1 "k8s.io/api/apps/v1"
@@ -40,13 +40,13 @@ func (ra *ResourceApply) applyDaemonSet(daemonSet *appsv1.DaemonSet) (runtime.Ob
 	assetVersion := GetLabelValue(daemonSet.Spec.Template.Labels, common.LabelDriverVersion)
 	deployedVersion := GetLabelValue(updateRes.Spec.Template.Labels, common.LabelDriverVersion)
 	if assetVersion != deployedVersion {
-		ra.Log.Info(fmt.Sprintf("Driver version changed from '%s' to '%s'. Updating DaemonSet", deployedVersion, assetVersion))
 		updateRes.Spec = daemonSet.Spec
 	}
 	if !ra.isOwnerSet(updateRes.OwnerReferences) {
 		updateRes.SetOwnerReferences(append(updateRes.GetOwnerReferences(), ra.Owner))
 	}
-	if !ra.Helper.DeepEqual(updateRes, found) {
+	if IsDriverUpdateNeeded() || !ra.Helper.DeepEqual(updateRes, found) {
+		updateRes.Spec.Template.Labels[common.LabelUpdateTime] = time.Now().Format(common.LabelTimeFormat)
 		return ra.updateResource(key, updateRes)
 	}
 	return found, nil
@@ -67,13 +67,13 @@ func (ra *ResourceApply) applyStatefulSet(statefulSet *appsv1.StatefulSet) (runt
 	assetVersion := GetLabelValue(statefulSet.Spec.Template.Labels, common.LabelDriverVersion)
 	deployedVersion := GetLabelValue(updateRes.Spec.Template.Labels, common.LabelDriverVersion)
 	if assetVersion != deployedVersion {
-		ra.Log.Info(fmt.Sprintf("Driver version changed from '%s' to '%s'. Updating statefulSet", deployedVersion, assetVersion))
 		updateRes.Spec = statefulSet.Spec
 	}
 	if !ra.isOwnerSet(updateRes.OwnerReferences) {
 		updateRes.SetOwnerReferences(append(updateRes.GetOwnerReferences(), ra.Owner))
 	}
-	if !ra.Helper.DeepEqual(updateRes, found) {
+	if IsDriverUpdateNeeded() || !ra.Helper.DeepEqual(updateRes, found) {
+		updateRes.Spec.Template.Labels[common.LabelUpdateTime] = time.Now().Format(common.LabelTimeFormat)
 		return ra.updateResource(key, updateRes)
 	}
 	return found, nil

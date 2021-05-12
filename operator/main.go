@@ -65,8 +65,8 @@ func main() {
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.Parse()
 
-	resourceapply.AddAssetPlaceHolder("${DRIVER_IMAGE}", driverImage)
-	resourceapply.AddAssetPlaceHolder("${DRIVER_VERSION}", driverVersion)
+	resourceapply.SetDriverImage(driverImage)
+	resourceapply.SetDriverVersion(driverVersion)
 
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
 
