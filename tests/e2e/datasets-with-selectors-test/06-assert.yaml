@@ -6,7 +6,7 @@ metadata:
 status:
   phase: Running
   conditions:
-    - type: csi.rhm.cos.ibm.com/datasets
+    - type: csi.marketplace.redhat.com/datasets
       status: 'True'
       reason: Complete
       message: Reconcile mounted 0 datasets
@@ -27,7 +27,7 @@ metadata:
 status:
   phase: Running
   conditions:
-    - type: csi.rhm.cos.ibm.com/datasets
+    - type: csi.marketplace.redhat.com/datasets
       status: 'True'
       reason: Complete
       message: Reconcile mounted 1 datasets

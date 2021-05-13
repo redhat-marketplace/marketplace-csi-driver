@@ -87,15 +87,15 @@ const (
 	MarketplaceNamespace = "openshift-redhat-marketplace"
 
 	// Pod condition, label and annotation constants
-	PodConditionType           corev1.PodConditionType = "csi.rhm.cos.ibm.com/datasets"
+	PodConditionType           corev1.PodConditionType = "csi.marketplace.redhat.com/datasets"
 	PodConditionReasonComplete                         = "Complete"
 	PodConditionReasonError                            = "Error"
 	PodConditionReasonWarning                          = "Warning"
 	PodConditionReasonNoAction                         = "NoAction"
-	PodLabelWatchKey                                   = "csi.rhm.cos.ibm.com/watch"
+	PodLabelWatchKey                                   = "csi.marketplace.redhat.com/watch"
 	PodLabelWatchValue                                 = "enabled"
 
-	PodAnnotationPath = "csi.rhm.cos.ibm.com/dspath"
+	PodAnnotationPath = "csi.marketplace.redhat.com/dspath"
 
 	// Resource names
 	ResourceNameS3Driver    = "marketplacecsidriver"
