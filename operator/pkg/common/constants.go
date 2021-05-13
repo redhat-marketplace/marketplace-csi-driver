@@ -39,6 +39,7 @@ const (
 	AssetPathRbacOlmRole               = "assets/rbac-olm-leader-role.yaml"
 	AssetPathRbacOlmRoleBinding        = "assets/rbac-olm-leader-role-binding.yaml"
 	AssetPathDatasetPVC                = "assets/dataset-pvc.yaml"
+	AssetPathDriverEnvironment         = "assets/csi-driver-env.yaml"
 
 	//Credential keys
 	CredentialAccessKey       = "AccessKeyID"
@@ -57,10 +58,12 @@ const (
 	LabelAppNode       = "csi-rhm-cos-ds"
 	LabelAppRegister   = "csi-rhm-cos-ss"
 	LabelAppReconcile  = "csi-rhm-cos-ctrl"
-	LabelDatasetID     = "csi.rhm.cos.ibm.com/uid"
-	LabelSelectorHash  = "csi.rhm.cos.ibm.com/selectorHash"
-	LabelDriverVersion = "csi.rhm.cos.ibm.com/driverVersion"
+	LabelDatasetID     = "csi.marketplace.redhat.com/uid"
+	LabelSelectorHash  = "csi.marketplace.redhat.com/selectorHash"
+	LabelDriverVersion = "csi.marketplace.redhat.com/driverVersion"
 	LabelUninstall     = "marketplace.redhat.com/uninstall"
+	LabelUpdateTime    = "deploymentUpdateTime"
+	LabelTimeFormat    = "20060102150405"
 
 	// MarketplaceNamespace redhat marketplace namespace
 	MarketplaceNamespace = "openshift-redhat-marketplace"

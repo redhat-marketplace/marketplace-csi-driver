@@ -23,6 +23,30 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+func (ra *ResourceApply) ApplyDriverConfigMap(cm *corev1.ConfigMap) (runtime.Object, error) {
+	found := &corev1.ConfigMap{}
+	key := types.NamespacedName{Namespace: cm.Namespace, Name: cm.Name}
+	cm.SetOwnerReferences(append(cm.GetOwnerReferences(), ra.Owner))
+	created, obj, err := ra.createResource(key, cm, found)
+	if err != nil {
+		return nil, err
+	}
+	if created {
+		SetDriverUpdateNeeded(true)
+		return obj, nil
+	}
+	updateRes := found.DeepCopy()
+	updateRes.Data = cm.Data
+	if !ra.isOwnerSet(updateRes.OwnerReferences) {
+		updateRes.SetOwnerReferences(append(updateRes.GetOwnerReferences(), ra.Owner))
+	}
+	if !ra.Helper.DeepEqual(updateRes, found) {
+		SetDriverUpdateNeeded(true)
+		return ra.updateResource(key, updateRes)
+	}
+	return found, nil
+}
+
 func (ra *ResourceApply) applyPersistentVolumeclaim(pvc *corev1.PersistentVolumeClaim) (runtime.Object, error) {
 	found := &corev1.PersistentVolumeClaim{}
 	pvc.Namespace = ra.Namespace

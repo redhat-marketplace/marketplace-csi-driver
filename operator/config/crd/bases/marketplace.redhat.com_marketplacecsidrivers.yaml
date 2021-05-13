@@ -66,6 +66,24 @@ spec:
             endpoint:
               description: Endpoint is the dataset S3 public endpoint
               type: string
+            environmentVariables:
+              description: EnvironmentVariables is a list of optional environment
+                variables for CSI driver. Change to environment variables will force
+                a restart of the driver.
+              items:
+                description: NameValueMap defines a name value pair
+                properties:
+                  name:
+                    description: Name for the property
+                    type: string
+                  value:
+                    description: Value of the property
+                    type: string
+                required:
+                - name
+                - value
+                type: object
+              type: array
             healthCheckIntervalInMinutes:
               description: HealthCheckIntervalInMinutes is the interval at which to
                 run health check for mounted volumes. A value of `0` disables periodic

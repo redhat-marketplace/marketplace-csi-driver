@@ -216,7 +216,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test", common.LabelUninstall: "true"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = fake.NewFakeClient(dataset, pvc)
 
 		req := reconcile.Request{
@@ -255,7 +255,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test", common.LabelUninstall: "true"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = newMarketplaceCSIDriverClient(
 			fake.NewFakeClient(dataset, pvc),
 			"delete",
@@ -305,7 +305,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = fake.NewFakeClient(dataset, pvc)
 
 		req := reconcile.Request{
@@ -356,7 +356,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = fake.NewFakeClient(dataset, pvc)
 
 		req := reconcile.Request{
@@ -395,7 +395,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = fake.NewFakeClient(dataset, pvc)
 
 		req := reconcile.Request{
@@ -480,7 +480,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = newMarketplaceCSIDriverClient(
 			fake.NewFakeClient(dataset, pvc),
 			"update",
@@ -626,7 +626,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = newMarketplaceCSIDriverClient(
 			fake.NewFakeClient(dataset, pvc),
 			"get",
@@ -669,7 +669,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = newMarketplaceCSIDriverClient(
 			fake.NewFakeClient(dataset, pvc),
 			"update",
@@ -712,7 +712,7 @@ var _ = Context("MarketplaceDataset Controller", func() {
 			},
 		}
 		dataset.Labels = map[string]string{common.LabelDatasetID: "test", common.LabelSelectorHash: "test"}
-		dataset.Annotations = map[string]string{"csi.rhm.cos.ibm.com/buckets": "test"}
+		dataset.Annotations = map[string]string{"csi.marketplace.redhat.com/buckets": "test"}
 		dr.Client = newMarketplaceCSIDriverClient(
 			fake.NewFakeClient(dataset, pvc),
 			"create",

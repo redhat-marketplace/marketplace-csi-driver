@@ -63,9 +63,12 @@ type ResourceApply struct {
 }
 
 var assetPlaceHolderPairs = []string{}
+var driverUpdateNeeded = false
+var driverImage = ""
+var driverVersion = ""
 
 func init() {
-	assetPlaceHolderPairs = append(assetPlaceHolderPairs, []string{"${NAMESPACE}", common.MarketplaceNamespace}...)
+	AddAssetPlaceHolder("${NAMESPACE}", common.MarketplaceNamespace)
 }
 
 func AddAssetPlaceHolder(key, value string) {
@@ -73,8 +76,27 @@ func AddAssetPlaceHolder(key, value string) {
 }
 
 func ResetAssetPlaceHolder() {
+	driverUpdateNeeded = false
 	assetPlaceHolderPairs = []string{}
-	assetPlaceHolderPairs = append(assetPlaceHolderPairs, []string{"${NAMESPACE}", common.MarketplaceNamespace}...)
+	AddAssetPlaceHolder("${NAMESPACE}", common.MarketplaceNamespace)
+	AddAssetPlaceHolder("${DRIVER_IMAGE}", driverImage)
+	AddAssetPlaceHolder("${DRIVER_VERSION}", driverVersion)
+}
+
+func IsDriverUpdateNeeded() bool {
+	return driverUpdateNeeded
+}
+
+func SetDriverImage(val string) {
+	driverImage = val
+}
+
+func SetDriverVersion(val string) {
+	driverVersion = val
+}
+
+func SetDriverUpdateNeeded(flag bool) {
+	driverUpdateNeeded = flag
 }
 
 // ReplaceAssetPlaceholders replace variables in yaml

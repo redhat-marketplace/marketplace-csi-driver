@@ -56,8 +56,8 @@ var lastHealthCheckTime time.Time = time.Now()
 // +kubebuilder:rbac:groups=core,resources=secrets,verbs=get;list;watch
 // +kubebuilder:rbac:groups=apps,resources=daemonsets;statefulsets,verbs=get;list;watch;create;update
 // +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterroles;clusterrolebindings;roles;rolebindings,verbs=get;list;watch;create;update
-// +kubebuilder:rbac:groups=core,resources=events,verbs=list;watch;create;update;patch
-// +kubebuilder:rbac:groups=core,resources=nodes;configmaps;namespaces,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core,resources=events;configmaps,verbs=get;list;watch;create;update;patch
+// +kubebuilder:rbac:groups=core,resources=nodes;namespaces,verbs=get;list;watch
 // +kubebuilder:rbac:urls=/metrics,verbs=get
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;patch
 // +kubebuilder:rbac:groups=core,resources=pods/status,verbs=update
@@ -123,6 +123,7 @@ func (r *MarketplaceCSIDriverReconciler) Reconcile(req ctrl.Request) (ctrl.Resul
 		return ctrl.Result{Requeue: false}, err
 	}
 
+	log.Info("Reconcile storageclass")
 	_, err = ra.Apply(common.AssetPathStorageClass)
 	if err != nil {
 		r.setStatusInstallError(&req, s3driver, err)
@@ -166,6 +167,13 @@ func (r *MarketplaceCSIDriverReconciler) Reconcile(req ctrl.Request) (ctrl.Resul
 
 	log.Info("Reconcile service")
 	_, err = ra.Apply(common.AssetPathCsiService)
+	if err != nil {
+		r.setStatusInstallError(&req, s3driver, err)
+		return ctrl.Result{Requeue: false}, err
+	}
+
+	log.Info("Reconcile driver configmap")
+	err = r.applyDriverEnvironment(s3driver, &ra)
 	if err != nil {
 		r.setStatusInstallError(&req, s3driver, err)
 		return ctrl.Result{Requeue: false}, err
@@ -262,6 +270,21 @@ func (r *MarketplaceCSIDriverReconciler) SetupWithManager(mgr ctrl.Manager) erro
 		Watches(&source.Kind{Type: &appsv1.StatefulSet{}}, ownerHandler).
 		Watches(&source.Kind{Type: &admbeta1.MutatingWebhookConfiguration{}}, ownerHandler).
 		Complete(r)
+}
+
+func (r *MarketplaceCSIDriverReconciler) applyDriverEnvironment(driver *marketplacev1alpha1.MarketplaceCSIDriver, ra *resourceapply.ResourceApply) error {
+	objGeneric, _ := ra.GetResource(common.AssetPathDriverEnvironment)
+	cm := objGeneric.(*corev1.ConfigMap)
+	if len(driver.Spec.EnvironmentVariables) > 0 {
+		for _, env := range driver.Spec.EnvironmentVariables {
+			cm.Data[env.Name] = env.Value
+		}
+	}
+	_, err := ra.ApplyDriverConfigMap(cm)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *MarketplaceCSIDriverReconciler) checkDriverPods(req *ctrl.Request, s3driver *marketplacev1alpha1.MarketplaceCSIDriver, isCredValid bool) (bool, bool, error) {
@@ -386,6 +409,7 @@ func (r *MarketplaceCSIDriverReconciler) createHealthCheckCR(ctx context.Context
 }
 
 func (r *MarketplaceCSIDriverReconciler) setUpAssetPlaceHolders(req *ctrl.Request) {
+	resourceapply.ResetAssetPlaceHolder()
 	log := r.Log.WithValues("Request.Namespace", req.Namespace, "Request.Name", req.Name)
 	platformType, _ := r.Helper.GetCloudProviderType(r.Client, log)
 	log.Info(fmt.Sprintf("Setting up asset place holders for platfrom: %s", platformType))

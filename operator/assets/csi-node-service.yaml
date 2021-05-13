@@ -11,7 +11,7 @@ spec:
     metadata:
       labels:
         app: csi-rhm-cos-ds
-        "csi.rhm.cos.ibm.com/driverVersion": "${DRIVER_VERSION}"
+        "csi.marketplace.redhat.com/driverVersion": "${DRIVER_VERSION}"
     spec:
       serviceAccount: csi-rhm-cos
       priorityClassName: system-node-critical
@@ -64,6 +64,9 @@ spec:
         - "--node-name=$(KUBE_NODE_NAME)"
         # https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md
         - "--v=5"
+        envFrom:
+        - configMapRef:
+            name: csi-rhm-cos-env
         env:
         - name: KUBE_NODE_NAME
           valueFrom:

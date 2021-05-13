@@ -46,9 +46,9 @@ metadata:
     capabilities: Full Lifecycle
     categories: Developer Tools
     containerImage: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.2
-    createdAt: "2021-04-05T22:29:02Z"
+    createdAt: "2021-05-12T17:51:02Z"
     description: The Red Hat Marketplace Dataset Operator provides a CSI driver to mount datasets purchased from Red Hat Marketplace into OpenShift workloads.
-    olm.skipRange: '>=0.0.0 <1.0.3'
+    olm.skipRange: '>=0.0.0 <1.0.4'
     operatorframework.io/suggested-namespace: openshift-operators
     operators.operatorframework.io/builder: operator-sdk-v1.4.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
@@ -60,7 +60,7 @@ metadata:
     operatorframework.io/arch.s390x: supported
     operatorframework.io/os.linux: supported
     razee/watch-resource: lite
-  name: dataset-operator.v1.0.3
+  name: dataset-operator.v1.0.4
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -155,21 +155,22 @@ spec:
           - ""
           resources:
           - configmaps
+          - events
+          verbs:
+          - create
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
           - namespaces
           - nodes
           verbs:
           - get
           - list
-          - watch
-        - apiGroups:
-          - ""
-          resources:
-          - events
-          verbs:
-          - create
-          - list
-          - patch
-          - update
           - watch
         - apiGroups:
           - ""
@@ -378,7 +379,7 @@ spec:
                 env:
                 - name: POD_NAME
                   value: redhat-marketplace-dataset-operator
-                image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.3
+                image: quay.io/rh-marketplace/marketplace-dataset-operator:1.0.4
                 name: manager
                 ports:
                 - containerPort: 9443
@@ -387,7 +388,7 @@ spec:
                 resources:
                   requests:
                     cpu: 100m
-                    memory: 100Mi
+                    memory: 200Mi
                 volumeMounts:
                 - mountPath: /tmp/k8s-webhook-server/serving-certs
                   name: cert
@@ -466,7 +467,7 @@ spec:
   maturity: alpha
   provider:
     name: Red Hat Marketplace
-  version: 1.0.3
+  version: 1.0.4
   webhookdefinitions:
   - admissionReviewVersions:
     - v1beta1

@@ -31,7 +31,7 @@ import (
 var (
 	version        = "1.0.0"
 	nodeNameFlag   = flag.String("node-name", "", "Node identifier")
-	driverNameFlag = flag.String("driver-name", "csi.rhm.cos.ibm.com", "CSI driver name")
+	driverNameFlag = flag.String("driver-name", "csi.marketplace.redhat.com", "CSI driver name")
 	endpointFlag   = flag.String("csi-endpoint", "unix:///csi/csi.sock", "CSI endpoint")
 	modeFlag       = flag.String("exec-mode", "driver", "Container mode, either driver, reconcile")
 	versionFlag    = flag.Bool("version", false, "Print the version and exit")

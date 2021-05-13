@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: csi-rhm-cos-ss
-        "csi.rhm.cos.ibm.com/driverVersion": "${DRIVER_VERSION}"
+        "csi.marketplace.redhat.com/driverVersion": "${DRIVER_VERSION}"
     spec:
       serviceAccount: csi-rhm-cos
       priorityClassName: system-node-critical
@@ -55,6 +55,9 @@ spec:
         - "--node-name=$(KUBE_NODE_NAME)"
         - "--csi-endpoint=unix://$(ADDRESS)"
         - "--v=5"
+        envFrom:
+        - configMapRef:
+            name: csi-rhm-cos-env
         env:
         - name: ADDRESS
           value: /var/lib/csi/sockets/pluginproxy/csi.sock
