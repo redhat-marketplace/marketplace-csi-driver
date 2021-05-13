@@ -355,7 +355,7 @@ var _ = Context("MarketplaceCSIDriver Controller", func() {
 	})
 
 	It("CSI Driver install error status update error", func() {
-		cl := newMarketplaceCSIDriverClient(fake.NewFakeClient(driver), "create", "CSIDriver", "csi.rhm.cos.ibm.com")
+		cl := newMarketplaceCSIDriverClient(fake.NewFakeClient(driver), "create", "CSIDriver", "csi.marketplace.redhat.com")
 		cl.setStatusErrorAction("update")
 		r.Client = cl
 		req := reconcile.Request{
@@ -1366,12 +1366,12 @@ func createMarketplaceCSIDriverClientForUpdate(ra resourceapply.ResourceApply, d
 	ss.Status = appsv1.StatefulSetStatus{
 		ReadyReplicas: 2,
 	}
-	ss.Spec.Template.Labels["csi.rhm.cos.ibm.com/driverVersion"] = "999.99.99"
+	ss.Spec.Template.Labels["csi.marketplace.redhat.com/driverVersion"] = "999.99.99"
 
 	dmobj1, err := ra.GetResource(common.AssetPathCsiNodeService)
 	Expect(err).NotTo(HaveOccurred(), "Test set up failed")
 	dm1 := dmobj1.(*appsv1.DaemonSet)
-	dm1.Spec.Template.Labels["csi.rhm.cos.ibm.com/driverVersion"] = "999.99.99"
+	dm1.Spec.Template.Labels["csi.marketplace.redhat.com/driverVersion"] = "999.99.99"
 
 	dmobj2, err := ra.GetResource(common.AssetPathCsiReconcileService)
 	Expect(err).NotTo(HaveOccurred(), "Test set up failed")

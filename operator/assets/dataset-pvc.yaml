@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: csi-rhm-cos-pvc
   annotations:
-    csi.rhm.cos.ibm.com/buckets: "all"
+    csi.marketplace.redhat.com/buckets: "all"
 spec:
   accessModes:
   - ReadOnlyMany

@@ -133,7 +133,7 @@ type MarketplaceCSIDriverStatus struct {
 // +kubebuilder:printcolumn:name="DRIVER_STATUS",type=string,JSONPath=`.status.conditions[?(@.type == "DriverStatus")].status`
 // +operator-sdk:gen-csv:customresourcedefinitions.specDescriptors.displayName="CSI Driver"
 // +operator-sdk:gen-csv:customresourcedefinitions.displayName="Marketplace dataset driver"
-// +operator-sdk:gen-csv:customresourcedefinitions.resources=`CSIDriver,storage.k8s.io/v1,"csi.rhm.cos.ibm.com"`
+// +operator-sdk:gen-csv:customresourcedefinitions.resources=`CSIDriver,storage.k8s.io/v1,"csi.marketplace.redhat.com"`
 // +operator-sdk:gen-csv:customresourcedefinitions.resources=`StorageClass,storage.k8s.io/v1,"csi-rhm-cos"`
 // +operator-sdk:gen-csv:customresourcedefinitions.resources=`ServiceAccount,v1,"csi-rhm-cos"`
 // +operator-sdk:gen-csv:customresourcedefinitions.resources=`ClusterRole,rbac.authorization.k8s.io/v1,"csi-rhm-cos-provisioner"`

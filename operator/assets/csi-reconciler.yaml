@@ -11,7 +11,7 @@ spec:
     metadata:
       labels:
         app: csi-rhm-cos-ctrl
-        "csi.rhm.cos.ibm.com/driverVersion": "${DRIVER_VERSION}"
+        "csi.marketplace.redhat.com/driverVersion": "${DRIVER_VERSION}"
     spec:
       serviceAccount: csi-rhm-cos
       priorityClassName: system-node-critical
