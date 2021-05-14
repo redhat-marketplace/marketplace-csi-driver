@@ -35,6 +35,7 @@ LABEL name="Red Hat Marketplace ${name}" \
 
 WORKDIR /
 
+RUN yum -y update-minimal --security --sec-severity=Important --sec-severity=Critical
 RUN echo "user_allow_other" > /etc/fuse.conf
 
 COPY --from=builder /workspace/marketplacecsidriver /usr/local/bin
