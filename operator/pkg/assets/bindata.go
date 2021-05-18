@@ -111,7 +111,7 @@ func assetsCsiControllerServiceYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/csi-controller-service.yaml", size: 2146, mode: os.FileMode(420), modTime: time.Unix(1620934013, 0)}
+	info := bindataFileInfo{name: "assets/csi-controller-service.yaml", size: 2146, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -131,7 +131,7 @@ func assetsCsiDriverEnvYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/csi-driver-env.yaml", size: 124, mode: os.FileMode(420), modTime: time.Unix(1620855950, 0)}
+	info := bindataFileInfo{name: "assets/csi-driver-env.yaml", size: 124, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -151,7 +151,7 @@ func assetsCsiDriverYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/csi-driver.yaml", size: 201, mode: os.FileMode(420), modTime: time.Unix(1620934013, 0)}
+	info := bindataFileInfo{name: "assets/csi-driver.yaml", size: 201, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -171,7 +171,7 @@ func assetsCsiNodeServiceYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/csi-node-service.yaml", size: 3330, mode: os.FileMode(420), modTime: time.Unix(1620934013, 0)}
+	info := bindataFileInfo{name: "assets/csi-node-service.yaml", size: 3330, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -191,7 +191,7 @@ func assetsCsiReconcilerYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/csi-reconciler.yaml", size: 1373, mode: os.FileMode(420), modTime: time.Unix(1620934013, 0)}
+	info := bindataFileInfo{name: "assets/csi-reconciler.yaml", size: 1373, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -291,7 +291,7 @@ func assetsDatasetPvcYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/dataset-pvc.yaml", size: 253, mode: os.FileMode(420), modTime: time.Unix(1620934013, 0)}
+	info := bindataFileInfo{name: "assets/dataset-pvc.yaml", size: 253, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -491,7 +491,7 @@ func assetsStorageClassYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "assets/storage-class.yaml", size: 123, mode: os.FileMode(420), modTime: time.Unix(1620934013, 0)}
+	info := bindataFileInfo{name: "assets/storage-class.yaml", size: 123, mode: os.FileMode(420), modTime: time.Unix(1620937712, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

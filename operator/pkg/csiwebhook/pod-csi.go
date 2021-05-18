@@ -18,13 +18,13 @@ package csiwebhook
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/go-logr/logr"
 	marketplacev1alpha1 "github.com/redhat-marketplace/marketplace-csi-driver/operator/api/v1alpha1"
 	"github.com/redhat-marketplace/marketplace-csi-driver/operator/pkg/common"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -36,14 +36,6 @@ type PodCSIVolumeMounter struct {
 	decoder *admission.Decoder
 	Log     logr.Logger
 	Helper  common.ControllerHelperInterface
-}
-
-var protectedNamespaces = make(map[string]struct{})
-
-func init() {
-	protectedNamespaces[metav1.NamespaceSystem] = struct{}{}
-	protectedNamespaces[metav1.NamespacePublic] = struct{}{}
-	protectedNamespaces[common.MarketplaceNamespace] = struct{}{}
 }
 
 func (a *PodCSIVolumeMounter) Handle(ctx context.Context, req admission.Request) admission.Response {
@@ -59,8 +51,7 @@ func (a *PodCSIVolumeMounter) Handle(ctx context.Context, req admission.Request)
 		podNamespace = req.Namespace
 	}
 	a.Log.Info(fmt.Sprintf("Check mutation needed for %s/%s", podNamespace, pod.Name))
-	_, ok := protectedNamespaces[podNamespace]
-	if ok {
+	if strings.HasPrefix(podNamespace, "openshift-") || strings.HasPrefix(podNamespace, "kube-") {
 		a.Log.Info(fmt.Sprintf("Namespace protected, mutation not needed for %s/%s", podNamespace, pod.Name))
 		return admission.Allowed("No mutation required")
 	}
