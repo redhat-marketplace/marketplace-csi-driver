@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 1.0.5
+VERSION ?= 1.0.6
 # Default bundle image tag
 BUNDLE_IMG ?= controller-bundle:$(VERSION)
 # Options for 'bundle-build'
@@ -18,7 +18,7 @@ OPERATOR_IMAGE_NAME = marketplace-dataset-operator
 OPERATOR_IMAGE_TAG ?= $(TAG)
 OPERATOR_IMAGE ?= $(IMAGE_REGISTRY)/$(OPERATOR_IMAGE_NAME):$(OPERATOR_IMAGE_TAG)
 
-BUNDLE_IMAGE_VERSION ?= 1.0.9
+BUNDLE_IMAGE_VERSION ?= 1.0.10
 BUNDLE_IMAGE_NAME = marketplace-dataset-operator-manifest
 BUNDLE_IMAGE ?= $(IMAGE_REGISTRY)/$(BUNDLE_IMAGE_NAME):$(BUNDLE_IMAGE_VERSION)
 
