@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/container-storage-interface/spec v1.3.0
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang-jwt/jwt v4.1.0
 	github.com/go-logr/logr v0.3.0 // indirect
 	github.com/googleapis/gnostic v0.5.3 // indirect
 	github.com/kubernetes-csi/csi-lib-utils v0.9.0
